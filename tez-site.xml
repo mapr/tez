@@ -8,12 +8,12 @@
 <!-- Tez properties -->
  
 <property>
-  <name>fs.default.name</name>
+  <name>fs.defaultFS</name>
   <value>maprfs:///</value>
 </property>
 <property>
   <name>tez.lib.uris</name>
-  <value>${fs.default.name}/apps/tez/tez-0.5.3,${fs.default.name}/apps/tez/tez-0.5.3/lib</value>
+  <value>${fs.defaultFS}/apps/tez/tez-0.5.3,${fs.default.name}/apps/tez/tez-0.5.3/lib</value>
 </property>
 
 <!-- To able to run on mapr cluster, tez.use.cluster.hadoop-libs has to be true -->
