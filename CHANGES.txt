@@ -4,6 +4,7 @@ Apache Tez Change Log
 Backporting
 
 ALL CHANGES:
+  TEZ-2214. FetcherOrderedGrouped can get stuck indefinitely when MergeManager misses memToDiskMerging
   TEZ-1923. FetcherOrderedGrouped gets into infinite loop due to memory pressure.
 
 Release 0.5.3: 2014-12-10
