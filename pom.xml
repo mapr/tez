@@ -42,7 +42,7 @@
   <properties>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <clover.license>${user.home}/clover.license</clover.license>
-    <hadoop.version>2.5.1-mapr-1501</hadoop.version>
+    <hadoop.version>2.5.1-mapr-1503-SNAPSHOT</hadoop.version>
     <jetty.version>7.6.10.v20130312</jetty.version>
     <distMgmtSnapshotsId>apache.snapshots.https</distMgmtSnapshotsId>
     <distMgmtSnapshotsName>Apache Development Snapshot Repository</distMgmtSnapshotsName>
