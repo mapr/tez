@@ -91,7 +91,7 @@
     <pluginRepository>
       <id>maven2-repository.atlassian</id>
       <name>Atlassian Maven Repository</name>
-      <url>https://maven.atlassian.com/repository/public</url>
+      <url>http://maven.corp.maprtech.com/nexus/content/groups/public/</url>
       <layout>default</layout>
     </pluginRepository>
     <pluginRepository>
