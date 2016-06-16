@@ -133,6 +133,11 @@
             <goals>
               <goal>bower</goal>
             </goals>
+            <configuration>
+              <workingDirectory>${webappDir}</workingDirectory>
+              <executable>${node.executable}</executable>
+              <arguments>install --allow-root --remove-unnecessary-resolutions=false</arguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>
