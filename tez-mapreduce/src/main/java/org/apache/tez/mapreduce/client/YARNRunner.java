@@ -117,6 +117,7 @@ import org.apache.tez.mapreduce.processor.reduce.ReduceProcessor;
 import org.apache.tez.mapreduce.protos.MRRuntimeProtos;
 import org.apache.tez.runtime.library.api.TezRuntimeConfiguration;
 import org.apache.tez.runtime.library.conf.OrderedPartitionedKVEdgeConfig;
+import org.apache.hadoop.yarn.api.records.NodeToLabelsList;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -197,6 +198,17 @@ public class YARNRunner implements ClientProtocol {
       throws IOException, InterruptedException {
     throw new UnsupportedOperationException("Use Token.renew instead");
   }
+
+  @Override
+  public List<NodeToLabelsList> getClusterNodeLabels() throws IOException, InterruptedException {
+    return new ArrayList<NodeToLabelsList>();
+  }
+
+  @Override
+  public boolean refreshClusterNodeLabels() throws IOException, InterruptedException {
+    return false;
+  }
+
 
   @Override
   public TaskTrackerInfo[] getActiveTrackers() throws IOException,
