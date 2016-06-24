@@ -42,7 +42,7 @@
   <properties>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <clover.license>${user.home}/clover.license</clover.license>
-    <hadoop.version>2.7.0-mapr-1506</hadoop.version>
+    <hadoop.version>2.7.0-mapr-1602</hadoop.version>
     <jetty.version>6.1.26</jetty.version>
     <pig.version>0.13.0</pig.version>
     <javac.version>1.7</javac.version>
@@ -88,9 +88,16 @@
       <url>${distMgmtSnapshotsUrl}</url>
     </repository>
     <repository>
-      <id>mapr-internal</id>
-      <name>mapr internal repo</name>
-      <url>http://maven.corp.maprtech.com/nexus/content/repositories/public/</url>
+      <id>mapr</id>
+      <name>MapR Maven repository</name>
+      <url>http://repository.mapr.com/nexus/content/repositories/releases/</url>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
@@ -106,6 +113,18 @@
       <name>${distMgmtSnapshotsName}</name>
       <url>${distMgmtSnapshotsUrl}</url>
       <layout>default</layout>
+    </pluginRepository>
+    <pluginRepository>
+      <id>mapr</id>
+      <name>MapR Maven repository</name>
+      <url>http://repository.mapr.com/nexus/content/repositories/releases/</url>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </pluginRepository>
   </pluginRepositories>
 
