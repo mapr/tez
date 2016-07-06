@@ -4,6 +4,7 @@ Apache Tez Change Log
 Backporting
 
 ALL CHANGES:
+  TEZ-2635. Limit number of attempts being downloaded in unordered fetch.
   TEZ-2214. FetcherOrderedGrouped can get stuck indefinitely when MergeManager misses memToDiskMerging
   TEZ-1923. FetcherOrderedGrouped gets into infinite loop due to memory pressure.
 
