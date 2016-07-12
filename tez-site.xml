@@ -13,7 +13,7 @@
 </property>
 <property>
   <name>tez.lib.uris</name>
-  <value>${fs.defaultFS}/apps/tez/tez-0.5.3,${fs.default.name}/apps/tez/tez-0.5.3/lib</value>
+  <value>${fs.defaultFS}/apps/tez/tez-0.5.3-mapr-1607,${fs.default.name}/apps/tez/tez-0.5.3-mapr-1607/lib</value>
 </property>
 
 <!-- To able to run on mapr cluster, tez.use.cluster.hadoop-libs has to be true -->

@@ -8,7 +8,7 @@ ALL CHANGES:
   TEZ-2214. FetcherOrderedGrouped can get stuck indefinitely when MergeManager misses memToDiskMerging
   TEZ-1923. FetcherOrderedGrouped gets into infinite loop due to memory pressure.
 
-Release 0.5.3: 2014-12-10
+Release 0.5.3-mapr-1607: 2014-12-10
 
 ALL CHANGES:
   TEZ-1758. TezClient should provide YARN diagnostics when the AM crashes
