@@ -321,7 +321,7 @@ public class TezCommonUtils {
         if (originalLr != null) {
           LocalResource additionalLr = lrEntry.getValue();
           if (originalLr.getSize() != additionalLr.getSize()) {
-            throw new TezUncheckedException(
+            LOG.warn(
                 "Duplicate Resources found with different size for [" + logContext + "]: " + lrEntry.getKey() +
                     " : " + "[" + additionalLr.getResource() + "=" + additionalLr.getSize() +
                     "],[" + originalLr.getResource() + "=" + originalLr.getSize());
