@@ -26,6 +26,8 @@ import org.apache.hadoop.classification.InterfaceStability.Unstable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
+import org.apache.hadoop.net.NetUtils;
+import org.apache.hadoop.yarn.conf.HAUtil;
 
 @Private
 @Unstable
@@ -42,6 +44,12 @@ public class Master {
   
   // This needs to go into YARN
   public static InetSocketAddress getMasterAddress(Configuration conf) {
+    if (HAUtil.isCustomRMHAEnabled(conf)) {
+      return NetUtils.createSocketAddr(HAUtil.getCurrentRMAddress(conf,
+              YarnConfiguration.RM_ADDRESS,
+              YarnConfiguration.DEFAULT_RM_ADDRESS,
+              YarnConfiguration.DEFAULT_RM_PORT));
+    }
     return conf
         .getSocketAddr(YarnConfiguration.RM_ADDRESS,
             YarnConfiguration.DEFAULT_RM_ADDRESS,
