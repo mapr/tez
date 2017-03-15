@@ -29,8 +29,8 @@
   <properties>
     <webappDir>src/main/webapp</webappDir>
     <node.executable>${basedir}/src/main/webapp/node/node</node.executable>
-    <nodeVersion>v0.12.2</nodeVersion>
-    <npmVersion>2.15.3</npmVersion>
+    <nodeVersion>v4.2.6</nodeVersion>
+    <npmVersion>3.5.2</npmVersion>
     <skipTests>false</skipTests>
   </properties>
 
