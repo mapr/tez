@@ -23,6 +23,10 @@
       <source>../tez-site.xml</source>
       <outputDirectory>/conf</outputDirectory>
     </file>
+    <file>
+      <source>../log4j.properties</source>
+      <outputDirectory>/conf</outputDirectory>
+    </file>
   </files>
   <includeBaseDirectory>false</includeBaseDirectory>
   <moduleSets>
