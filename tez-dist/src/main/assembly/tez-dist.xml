@@ -27,6 +27,10 @@
       <source>../log4j.properties</source>
       <outputDirectory>/conf</outputDirectory>
     </file>
+    <file>
+      <source>../tez-ui/downloads/tomcat.tar.gz</source>
+      <outputDirectory>/tomcat</outputDirectory>
+    </file>
   </files>
   <includeBaseDirectory>false</includeBaseDirectory>
   <moduleSets>

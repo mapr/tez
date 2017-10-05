@@ -250,6 +250,50 @@
           <skipIfEmpty>true</skipIfEmpty>
         </configuration>
       </plugin>
+      <!-- Downloading Tomcat TAR.GZ, using downloads/ dir to avoid downloading over an over -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dist</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <mkdir dir="downloads"/>
+                <get
+                  src="http://archive.apache.org/dist/tomcat/tomcat-9/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.tar.gz"
+                  dest="downloads/tomcat.tar.gz" verbose="true" skipexisting="true"/>
+
+                <!-- Add server.xml and  tez-ui war to tomcat.tar.gz -->
+                <echo file="${project.build.directory}/tomcat-add-files.sh">
+
+                  cd ${basedir}/downloads/
+                  tar -zxvf ${basedir}/downloads/tomcat.tar.gz
+                  rm ${basedir}/downloads/tomcat.tar.gz
+                  mkdir ${basedir}/downloads/apache-tomcat-${tomcat.version}/webapps/tez-ui
+                  cp ${basedir}/target/tez-ui-${version}.war ${basedir}/downloads/apache-tomcat-${tomcat.version}/webapps/tez-ui/tez-ui.war
+                  cd ${basedir}/downloads/apache-tomcat-${tomcat.version}/webapps/tez-ui
+                  jar xvf tez-ui.war
+                  rm tez-ui.war
+                  cp ${basedir}/conf/server.xml ${basedir}/downloads/apache-tomcat-${tomcat.version}/conf
+                  sed -i -- 's/tezwebui.admin.port/${tezwebui.admin.port}/g' ${basedir}/downloads/apache-tomcat-${tomcat.version}/conf/server.xml
+                  cd ${basedir}/downloads/
+                  tar -czvf tomcat.tar.gz apache-tomcat-${tomcat.version}
+                </echo>
+
+                <exec executable="sh" dir="${project.build.directory}" failonerror="true">
+                  <arg line="./tomcat-add-files.sh"/>
+                </exec>
+
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
