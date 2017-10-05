@@ -63,6 +63,9 @@
     <frontend-maven-plugin.version>0.0.23</frontend-maven-plugin.version>
     <findbugs-maven-plugin.version>3.0.1</findbugs-maven-plugin.version>
     <javadoc-maven-plugin.version>2.9.1</javadoc-maven-plugin.version>
+    <tomcat.version>9.0.1</tomcat.version>
+    <tezwebui.admin.port>9383</tezwebui.admin.port>
+    <tez.tomcat.dist.dir>${project.build.directory}/${project.artifactId}-${project.version}/tomcat</tez.tomcat.dist.dir>
   </properties>
   <scm>
     <connection>${scm.url}</connection>
