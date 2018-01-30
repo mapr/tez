@@ -41,7 +41,7 @@ App.TezAppDagsController = App.TablePageController.extend({
         //Load tezApp details
         if (dag.get('status') === 'RUNNING') {
           App.Helpers.misc.removeRecord(store, 'dagProgress', dag.get('id'));
-          fetcher = store.find('dagProgress', dag.get('id'), {
+          fetcher = store.fetch('dagProgress', dag.get('id'), {
             appId: dag.get('applicationId'),
             dagIdx: dag.get('idx')
           })

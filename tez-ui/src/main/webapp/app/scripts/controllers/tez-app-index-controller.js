@@ -22,7 +22,7 @@ App.TezAppIndexController = App.PollingController.extend(App.ModelRefreshMixin, 
   controllerName: 'TezAppIndexController',
 
   rmTrackingURL: function() {
-    return "%@/%@/app/%@".fmt(App.env.RMWebUrl, App.Configs.otherNamespace.cluster, this.get('appId'));
+    return "%@/%@/app/%@".fmt(App.Helpers.misc.normalizePath(App.env.getRMWebUrl()), App.Configs.otherNamespace.cluster, this.get('appId'));
   }.property('appId'),
 
   load: function () {

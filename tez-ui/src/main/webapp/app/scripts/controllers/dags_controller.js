@@ -190,7 +190,7 @@ App.DagsController = Em.ObjectController.extend(App.PaginatedContentMixin, App.C
           }).finally(function (entities) {
             if(dag.get('status') === 'RUNNING') {
               App.Helpers.misc.removeRecord(store, 'dagProgress', dag.get('id'));
-              store.find('dagProgress', dag.get('id'), {
+              store.fetch('dagProgress', dag.get('id'), {
                 appId: dag.get('applicationId'),
                 dagIdx: dag.get('idx')
               })

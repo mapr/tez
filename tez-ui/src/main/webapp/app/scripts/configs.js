@@ -25,18 +25,23 @@ App.setConfigs({
      * By default TEZ UI looks for timeline server at http://localhost:8188, uncomment and change
      * the following value for pointing to a different domain.
      */
-    timelineBaseUrl: TIME_LINE_BASE_URL,
-
-    /*
-     * By default RM web interface is expected to be at http://localhost:8088, uncomment and change
-     * the following value to point to a different domain.
-     */
-    RMWebUrl: RM_WEB_URL,
+    timelineBaseUrl: TIMELINE_BASE_URL,
 
     /*
      * Ensures that some of the UI features work with old versions of Tez
      */
     compatibilityMode: false,
+
+    /*
+     * By default RM web interface is expected to be at http://localhost:8088, uncomment and change
+     * the following value to point to a different domain. * IT IS DEPRECATED NOW *
+     */
+    RMWebUrl: RM_WEB_URL,
+
+    /*
+       Interval in ms for health check Resource Manager
+    */
+    healthCheckInterval: 10000,
 
     /*
      * Default time zone for UI display. Set to undefined for local timezone

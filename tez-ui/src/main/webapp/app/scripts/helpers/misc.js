@@ -682,11 +682,12 @@ App.Helpers.misc = {
         params = amUser ? {
           "user.name": amUser
         } : {},
-        RMWebUrl = App.env.RMWebUrl || "",
+        RMWebUrl = App.env.getRMWebUrl() || "",
         currentProtocol = location.protocol,
         protocol = App.env.yarnProtocol ||
             RMWebUrl.substr(0, RMWebUrl.indexOf("://")) ||
             currentProtocol.substr(0, currentProtocol.length - 1);
+
 
     if(attempt) {
       link = attempt.get('inProgressLog');
@@ -819,6 +820,9 @@ App.Helpers.misc = {
       error.message = "Couldn't get details of application %@. RM is not reachable, and history service is not enabled.".fmt(appId);
       throw error;
     });
+  },
+  checkURLIsValid: function(url) {
+    return url.indexOf(' ') <= -1 && url.indexOf("ERROR") <= -1;
   }
 
 }

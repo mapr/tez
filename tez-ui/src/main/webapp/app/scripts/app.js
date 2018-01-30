@@ -19,7 +19,9 @@
 Ember.FEATURES.I18N_TRANSLATE_HELPER_SPAN = false;
 Ember.ENV.I18N_COMPILE_WITHOUT_HANDLEBARS = true;
 
-var App = window.App = Em.Application.createWithMixins(Bootstrap, {
+
+
+var App = window.App = Ember.Application.create(Bootstrap, {
   // Basic logging, e.g. "Transitioned into 'post'"
   LOG_TRANSITIONS: true,
 
@@ -31,8 +33,23 @@ var App = window.App = Em.Application.createWithMixins(Bootstrap, {
 
   env: {
     isStandalone: true, // Can ne set false in the wrapper initializer
-    isIE: navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0
-  },
+    isIE: navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0,
+      getRMWebUrl: function(helperServerUrl, callback) {
+          $.ajax({
+              type: "GET",
+              url: helperServerUrl,
+              async: false,
+              success: function (response) {
+                  if(typeof callback == "function") {
+                      callback(response)
+                  }
+              }
+          });
+      },
+      host: ''
+    },
+
+
 
   setConfigs: function (configs) {
     if(configs.envDefaults.version == "${version}") {
@@ -41,15 +58,16 @@ var App = window.App = Em.Application.createWithMixins(Bootstrap, {
     App.Helpers.misc.merge(App.Configs, configs);
     $.extend(App.env, {
       timelineBaseUrl: App.Helpers.misc.normalizePath(App.env.timelineBaseUrl),
-      RMWebUrl: App.Helpers.misc.normalizePath(App.env.RMWebUrl)
+      helperServerUrl: 'helper',
     });
+
     App.advanceReadiness();
-  }
+  },
+
 });
 
-Em.Application.initializer({
+Ember.Application.initializer({
   name: "objectTransforms",
-
   initialize: function(container, application) {
     application.register('transform:object', DS.Transform.extend({
       deserialize: function(serialized) {
@@ -77,11 +95,44 @@ App.ready = function () {
     tooltipClass: 'generic-tooltip'
   });
 
-  ["timelineBaseUrl", "RMWebUrl"].forEach(function(item) {
+
+  ["timelineBaseUrl"].forEach(function(item) {
     if (!!App.env[item]) {
       App.env[item] = App.Helpers.misc.normalizePath(App.env[item]);
     }
-  })
+  });
+
+    App.Poller = Ember.Object.extend({
+        _interval: App.env.healthCheckInterval,
+        _currentlyExecutedFunction: null,
+
+        start: function(context, pollingFunction) {
+            this.set('_currentlyExecutedFunction', this._schedule(context, pollingFunction, [].slice.call(arguments, 2)));
+        },
+
+        stop: function() {
+            Em.run.cancel(this.get('_currentlyExecutedFunction'));
+        },
+
+        _schedule: function(context, func, args) {
+            return Em.run.later(this, function() {
+                this.set('_currentlyExecutedFunction', this._schedule(context, func, args));
+                func.apply(context, args);
+            }, this.get('_interval'));
+        },
+
+        setInterval: function(interval) {
+            this.set('_interval', interval);
+        }
+    });
+    App.env.getRMWebUrl(App.env.helperServerUrl, function(url) {
+      if(url.indexOf(' ') > -1) {
+
+      } else {
+          Ember.set(App.env,'host', url.trim());
+      }
+    });
+
 
   App.ApplicationAdapter = App.TimelineRESTAdapter.extend({
     host: App.env.timelineBaseUrl
@@ -100,7 +151,7 @@ App.ready = function () {
     host: App.env.timelineBaseUrl,
     pathForType: function() {
       return "apps";
-    },
+    }
   });
 
   App.DagVertexAdapter =
@@ -158,9 +209,41 @@ App.ready = function () {
       hash.targetServer = "Resource Manager";
       return this._super(url, method, hash);
     },
-    host: App.env.RMWebUrl,
+      host:function(){
+          return Ember.get(App.env,'host');
+      }.property(App.env.host).volatile(),
     namespace: App.Configs.restNamespace.aminfo,
   });
+
+    var poller = App.Poller.create();
+    poller.start(this, function () {
+        $.ajax({
+            method: 'GET',
+            url: Ember.get(App.env, 'helperServerUrl'),
+            success: function (url) {
+                url  = url.trim();
+              if(!App.Helpers.misc.checkURLIsValid(url)) {
+                  var error = {};
+                  error.message = "YARN ResourceManager (RM) is out of reach.";
+                  Em.Logger.error(error);
+                  var err = App.Helpers.misc.formatError(error);
+                  var msg = 'Error code: %@, message: %@'.fmt(err.errCode, err.msg);
+                  App.Helpers.ErrorBar.getInstance().show(msg, err.details);
+              } else {
+                  if(App.env.host !== url) {
+                      Ember.set(App.env,'host', url);
+                  }
+                  App.Helpers.ErrorBar.getInstance().hide();
+              }
+            },
+            error: function (request, status, error) {
+                console.log(status);
+                console.log(error);
+            }
+        });
+    });
+
+
 
   App.DagProgressAdapter = App.AMInfoAdapter.extend({
     buildURL: function(type, id, record) {
@@ -270,7 +353,9 @@ App.ready = function () {
   });
 
   App.ClusterAppAdapter = DS.RESTAdapter.extend({
-    host: App.env.RMWebUrl,
+    host:function(){
+      return Ember.get(App.env,'host');
+    }.property(App.env.host).volatile(),
     namespace: App.Configs.restNamespace.cluster,
     pathForType: function() {
       return 'apps';
