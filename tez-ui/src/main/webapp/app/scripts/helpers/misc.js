@@ -682,12 +682,11 @@ App.Helpers.misc = {
         params = amUser ? {
           "user.name": amUser
         } : {},
-        RMWebUrl = App.env.getRMWebUrl() || "",
+        timelineBaseUrl = App.env.timelineBaseUrl || "",
         currentProtocol = location.protocol,
         protocol = App.env.yarnProtocol ||
-            RMWebUrl.substr(0, RMWebUrl.indexOf("://")) ||
+            timelineBaseUrl.substr(0, timelineBaseUrl.indexOf("://")) ||
             currentProtocol.substr(0, currentProtocol.length - 1);
-
 
     if(attempt) {
       link = attempt.get('inProgressLog');

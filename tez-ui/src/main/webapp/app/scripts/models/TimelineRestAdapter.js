@@ -154,11 +154,17 @@ var timelineJsonToDagMap = {
       if(!otherinfo) {
         return undefined;
       }
+        var timelineBaseUrl = App.env.timelineBaseUrl || "";
+        var currentProtocol = location.protocol;
+        var protocol = App.env.yarnProtocol ||
+            timelineBaseUrl.substr(0, timelineBaseUrl.indexOf("://")) ||
+            currentProtocol.substr(0, currentProtocol.length - 1);
+
       for (var key in otherinfo) {
         if (key.indexOf('inProgressLogsURL_') === 0) {
           var logs = Em.get(source, 'otherinfo.' + key);
           if (logs.indexOf('http') !== 0) {
-            logs = 'http://' + logs;
+            logs = protocol + '://' + logs;
           }
           var attemptid = key.substring(18);
           containerLogs.push({id : attemptid, containerLog: logs});
