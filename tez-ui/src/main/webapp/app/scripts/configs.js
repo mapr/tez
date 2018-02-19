@@ -22,7 +22,7 @@ App.setConfigs({
   envDefaults: {
     version: "${version}",
     /*
-     * By default TEZ UI looks for timeline server at http://localhost:8188, uncomment and change
+     * By default TEZ UI looks for timeline server at 'http://localhost:8188', uncomment and change
      * the following value for pointing to a different domain.
      */
     timelineBaseUrl: TIMELINE_BASE_URL,
@@ -33,7 +33,7 @@ App.setConfigs({
     compatibilityMode: false,
 
     /*
-     * By default RM web interface is expected to be at http://localhost:8088, uncomment and change
+     * By default RM web interface is expected to be at 'http://localhost:8088', uncomment and change
      * the following value to point to a different domain. * IT IS DEPRECATED NOW *
      */
     RMWebUrl: RM_WEB_URL,
