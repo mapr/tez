@@ -25,7 +25,7 @@ App.setConfigs({
      * By default TEZ UI looks for timeline server at 'http://localhost:8188', uncomment and change
      * the following value for pointing to a different domain.
      */
-    timelineBaseUrl: TIMELINE_BASE_URL,
+    timelineBaseUrl: TIME_LINE_BASE_URL,
 
     /*
      * Ensures that some of the UI features work with old versions of Tez
