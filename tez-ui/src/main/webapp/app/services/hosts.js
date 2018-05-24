@@ -51,13 +51,12 @@ export default Ember.Service.extend({
     return this.normalizeURL(this.get("env.app.hosts.timeline"));
   }),
 
-  rm: Ember.computed(function () {
-    return this.normalizeURL(this.get("env.app.hosts.rm"));
-  }),
+  rm: '',
 
-  am: Ember.computed(function () {
+  am: Ember.computed("env.app.hosts.rmProxy", "env.app.hosts.rm", function () {
     var url = this.get("env.app.hosts.rmProxy") || this.get("env.app.hosts.rm");
     return this.normalizeURL(url);
   }),
 
+  helperServerUrl: 'helper',
 });

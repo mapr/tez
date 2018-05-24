@@ -19,6 +19,7 @@
 import Ember from 'ember';
 
 import NameMixin from '../mixins/name';
+import checkURLIsValid from '../utils/misc';
 
 export default Ember.Controller.extend(NameMixin, {
   // Must be set by inheriting classes
@@ -27,9 +28,18 @@ export default Ember.Controller.extend(NameMixin, {
   // Must be set from abstract route
   loadTime: null,
   isLoading: false,
+  env: Ember.inject.service("env"),
+  helperServerUrl: "helper",
+  pollster: Ember.inject.service("active-resource-manager-poller"),
+  errorsHandler: Ember.inject.service("errors-handler"),
 
   init: function () {
     this._super();
+
+    let poll = this.get("pollster");
+    let interval = this.get("env.app.healthCheckInterval");
+    poll.setInterval(interval);
+
     Ember.run.later(this, "setBreadcrumbs");
   },
 
@@ -46,5 +56,18 @@ export default Ember.Controller.extend(NameMixin, {
         name = this.get("name");
     crumbs[name] = this.get("breadcrumbs");
     this.send("setBreadcrumbs", crumbs);
+  },
+
+  getActiveRMWebUrl: function (helperServerUrl, callback) {
+    $.ajax({
+      type: "GET",
+      url: helperServerUrl,
+      async: false,
+      success: function (response) {
+        if(typeof callback == "function") {
+          callback(response)
+        }
+      }
+    });
   }
 });

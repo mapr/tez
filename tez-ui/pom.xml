@@ -31,11 +31,24 @@
 
     <nodeVersion>v5.12.0</nodeVersion>
     <nodeExecutable>${basedir}/src/main/webapp/node/node</nodeExecutable>
-
+    <servlet.version>3.1.0</servlet.version>
     <packageManagerScript>node/yarn/dist/bin/yarn.js</packageManagerScript>
 
     <skipTests>false</skipTests>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
 
   <profiles>
     <!-- Clear temporary directories -->
@@ -137,7 +150,7 @@
               <goal>yarn</goal>
             </goals>
             <configuration>
-              <arguments>install</arguments>
+              <arguments>install --ignore-engines</arguments>
             </configuration>
           </execution>
           <execution>

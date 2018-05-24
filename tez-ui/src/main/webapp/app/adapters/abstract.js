@@ -23,10 +23,10 @@ import LoaderAdapter from './loader';
 export default LoaderAdapter.extend({
   serverName: null, //Must be set by inheriting classes
 
-  host: Ember.computed("serverName", function () {
+  host: Ember.computed("serverName", "hosts.{rm,am,timeline}", function () {
     var serverName = this.get("serverName");
     return this.get(`hosts.${serverName}`);
-  }),
+  }).volatile(),
   namespace: Ember.computed("serverName", function () {
     var serverName = this.get("serverName");
     return this.get(`env.app.namespaces.webService.${serverName}`);

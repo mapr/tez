@@ -21,3 +21,6 @@ export default function isIOCounter(name) {
   name = name.substr(name.indexOf('_') + 1);
   return !!(name.match('_INPUT_') || name.match('_OUTPUT_'));
 }
+export default function checkURLIsValid(url){
+  return url.indexOf(' ') <= -1 && url.indexOf("ERROR") <= -1;
+}

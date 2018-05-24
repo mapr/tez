@@ -22,4 +22,14 @@
 
 <web-app>
   <display-name>TEZ UI</display-name>
+  <servlet>
+    <servlet-name>helperServlet</servlet-name>
+    <servlet-class>org.apache.tez.ui.servlet.ActiveResourceManagerServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>helperServlet</servlet-name>
+    <url-pattern>/helper</url-pattern>
+  </servlet-mapping>
+
 </web-app>

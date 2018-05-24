@@ -22,7 +22,9 @@ const DISPLAY_TIME = 30 * 1000;
 
 export default Ember.Component.extend({
 
-  error: null,
+  errorsHandler: Ember.inject.service("errors-handler"),
+
+  error: Ember.computed.alias('errorsHandler.error'),
 
   visible: false,
   detailsAvailable: false,

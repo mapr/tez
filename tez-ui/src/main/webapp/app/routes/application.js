@@ -20,7 +20,7 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   title: "Application",
-
+  errorsHandler: Ember.inject.service("errors-handler"),
   pageReset: function () {
     this.send("resetTooltip");
   },
@@ -34,7 +34,7 @@ export default Ember.Route.extend({
     },
 
     error: function (error) {
-      this.set("controller.appError", error);
+      this.set("errorsHandler.error", error);
       Ember.Logger.error(error);
     },
 
