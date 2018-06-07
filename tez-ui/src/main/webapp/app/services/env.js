@@ -52,8 +52,8 @@ export default Ember.Service.extend({
     env.isIE = navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > 0;
 
     if(!env.APP.yarnProtocol) {
-      let rmHost = Ember.get(env, "hosts.rm") || "";
-      env.APP.yarnProtocol = rmHost.substr(0, rmHost.indexOf("://")) || window.location.protocol.slice(0, -1);
+      let timeline = env.APP.hosts.timeline || "";
+      env.APP.yarnProtocol = timeline.substr(0, timeline.indexOf("://")) || window.location.protocol.slice(0, -1);
     }
   },
 

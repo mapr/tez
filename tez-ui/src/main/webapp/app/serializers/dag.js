@@ -20,6 +20,7 @@
 import Ember from 'ember';
 
 import DAGInfoSerializer from './dag-info';
+import env from '../services/env';
 
 var MoreObject = more.Object;
 
@@ -71,12 +72,12 @@ function getContainerLogs(source) {
   if(!otherinfo) {
     return undefined;
   }
-
+  let yarnProtocol = this.get('env.app.yarnProtocol');
   for (var key in otherinfo) {
     if (key.indexOf('inProgressLogsURL_') === 0) {
       let logs = Ember.get(source, 'otherinfo.' + key);
-      if (logs.indexOf('http') !== 0) {
-        logs = 'http://' + logs;
+      if(logs && logs.indexOf("://") === -1) {
+        logs = `${yarnProtocol}://${logs}`;
       }
       let attemptID = key.substring(18);
       containerLogs.push({
