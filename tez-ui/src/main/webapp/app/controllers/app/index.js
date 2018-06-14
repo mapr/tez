@@ -21,9 +21,9 @@ import PageController from '../page';
 
 export default PageController.extend({
 
-  trackingURL: Ember.computed("model.appID", function () {
+  trackingURL: Ember.computed("model.appID","hosts.{rm,am}", function () {
     return [
-      this.get("hosts.rm"),
+      this.get("hosts.am"),
       this.get("env.app.namespaces.web.rm"),
       "app",
       this.get("model.appID")
