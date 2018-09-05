@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.tez</groupId>
     <artifactId>tez</artifactId>
-    <version>0.8.4-mapr-1803</version>
+    <version>0.8.4-mapr-1803-r1</version>
   </parent>
   <artifactId>tez-tools</artifactId>
   <packaging>pom</packaging>
