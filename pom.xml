@@ -24,7 +24,7 @@
   <groupId>org.apache.tez</groupId>
   <artifactId>tez</artifactId>
   <packaging>pom</packaging>
-  <version>0.8.4-mapr</version>
+  <version>0.8.4-mapr-1808</version>
   <name>tez</name>
 
   <licenses>
