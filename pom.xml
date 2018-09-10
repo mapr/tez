@@ -24,7 +24,7 @@
   <groupId>org.apache.tez</groupId>
   <artifactId>tez</artifactId>
   <packaging>pom</packaging>
-  <version>0.9.1-mapr</version>
+  <version>0.9.1-mapr-1808</version>
   <name>tez</name>
 
   <licenses>
@@ -42,7 +42,7 @@
   <properties>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <clover.license>${user.home}/clover.license</clover.license>
-    <hadoop.version>2.7.0-mapr-1710-SNAPSHOT</hadoop.version> <!-- TODO: Change to 1806 after 6.1.0 release -->
+    <hadoop.version>2.7.0-mapr-1808</hadoop.version> <!-- TODO: Change to 1806 after 6.1.0 release -->
     <jetty.version>6.1.26</jetty.version>
     <netty.version>3.6.2.Final</netty.version>
     <pig.version>0.13.0</pig.version>
