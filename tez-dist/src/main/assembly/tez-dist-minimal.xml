@@ -27,6 +27,11 @@
       <source>../log4j.properties</source>
       <outputDirectory>/conf</outputDirectory>
     </file>
+    <file>
+      <source>${project.parent.basedir}/mapr-conf-tool/src/main/resources/conftool-log4j.properties</source>
+      <outputDirectory>bin</outputDirectory>
+      <destName>conftool-log4j.properties</destName>
+    </file>
   </files>
   <includeBaseDirectory>false</includeBaseDirectory>
   <moduleSets>
@@ -34,6 +39,7 @@
       <useAllReactorProjects>true</useAllReactorProjects>
       <excludes>
         <exclude>org.apache.tez:tez-aux-services</exclude>
+        <exclude>org.apache.tez.conftool:mapr-tez-conf-tool</exclude>
       </excludes>
       <binaries>
         <outputDirectory>/</outputDirectory>
@@ -60,6 +66,16 @@
         </dependencySets>
       </binaries>
     </moduleSet>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <includes>
+        <include>org.apache.tez.conftool:mapr-tez-conf-tool</include>
+      </includes>
+      <binaries>
+        <outputDirectory>/lib</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
   </moduleSets>
   <fileSets>
     <fileSet>
@@ -68,6 +84,15 @@
       <includes>
         <include>**</include>
       </includes>
+    </fileSet>
+    <fileSet>
+      <fileMode>755</fileMode>
+      <directory>${project.parent.basedir}/bin</directory>
+      <includes>
+        <include>configure.sh</include>
+        <include>conftool</include>
+      </includes>
+      <outputDirectory>bin</outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>
