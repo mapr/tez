@@ -42,7 +42,7 @@
   <properties>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <clover.license>${user.home}/clover.license</clover.license>
-    <hadoop.version>2.7.0-mapr-1710-SNAPSHOT</hadoop.version> <!-- TODO: Change to 1806 after 6.1.0 release -->
+    <hadoop.version>2.7.0-mapr-1808</hadoop.version>
     <jetty.version>6.1.26</jetty.version>
     <netty.version>3.6.2.Final</netty.version>
     <pig.version>0.13.0</pig.version>
@@ -113,7 +113,7 @@
         <checksumPolicy>warn</checksumPolicy>
       </releases>
       <snapshots>
-        <enabled>true</enabled> <!-- TODO: Set to false after 6.1.0 release -->
+        <enabled>false</enabled>
       </snapshots>
     </repository>
   </repositories>
@@ -140,7 +140,7 @@
         <checksumPolicy>warn</checksumPolicy>
       </releases>
       <snapshots>
-        <enabled>true</enabled> <!-- TODO: Set to false after 6.1.0 release -->
+        <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
@@ -862,12 +862,11 @@
             <additionalparam>-Xdoclint:none</additionalparam>
           </configuration>
         </plugin>
-        <!-- TODO: Uncomment  after 6.1.0 release because we have no such plugins in snapshot repo-->
-        <!--<plugin>-->
-          <!--<groupId>org.apache.hadoop</groupId>-->
-          <!--<artifactId>hadoop-maven-plugins</artifactId>-->
-          <!--<version>${hadoop.version}</version>-->
-        <!--</plugin>-->
+        <plugin>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-maven-plugins</artifactId>
+          <version>${hadoop.version}</version>
+       </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
