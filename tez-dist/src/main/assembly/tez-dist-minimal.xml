@@ -41,18 +41,22 @@
             <scope>runtime</scope>
             <outputDirectory>/lib</outputDirectory>
             <useTransitiveDependencies>false</useTransitiveDependencies>
-            <excludes>
-              <exclude>*:*:test-jar</exclude>
-              <exclude>org.apache.hadoop:hadoop-annotations</exclude>
-              <exclude>org.apache.hadoop:hadoop-auth</exclude>
-              <exclude>org.apache.hadoop:hadoop-common</exclude>
-              <exclude>org.apache.hadoop:hadoop-hdfs</exclude>
-              <exclude>org.apache.hadoop:hadoop-yarn-api</exclude>
-              <exclude>org.apache.hadoop:hadoop-yarn-client</exclude>
-              <exclude>org.apache.hadoop:hadoop-yarn-common</exclude>
-              <exclude>org.apache.hadoop:hadoop-yarn-server-web-proxy</exclude>
-              <exclude>org.apache.tez:*</exclude>
-            </excludes>
+            <includes>
+              <include>
+                org.apache.hadoop:hadoop-mapreduce-client-core
+              </include>
+              <include>
+                org.apache.hadoop:hadoop-mapreduce-client-common
+              </include>
+              <include>org.codehaus.jettison:jettison</include>
+              <include>io.dropwizard.metrics:metrics-core</include>
+              <include>org.roaringbitmap:RoaringBitmap</include>
+              <include>org.mortbay.jetty:servlet-api</include>
+              <include>stax:stax-api</include>
+              <include>com.ning:async-http-client</include>
+              <include>org.apache.commons:commons-collections4</include>
+              <include>com.google.guava:guava</include>
+            </includes>
           </dependencySet>
         </dependencySets>
       </binaries>
