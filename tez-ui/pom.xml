@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.tez</groupId>
     <artifactId>tez</artifactId>
-    <version>0.8.4-mapr</version>
+    <version>0.8.4-mapr-1901</version>
   </parent>
   <artifactId>tez-ui</artifactId>
   <packaging>war</packaging>
