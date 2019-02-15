@@ -79,6 +79,7 @@ public class TestMROutput {
   public void testNewAPI_TextOutputFormat() throws Exception {
     String outputPath = "/tmp/output";
     Configuration conf = new Configuration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setBoolean(MRConfig.IS_MAP_PROCESSOR, true);
     DataSinkDescriptor dataSink = MROutput
         .createConfigBuilder(conf, TextOutputFormat.class, outputPath)
@@ -103,6 +104,7 @@ public class TestMROutput {
   public void testOldAPI_TextOutputFormat() throws Exception {
     String outputPath = "/tmp/output";
     Configuration conf = new Configuration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setBoolean(MRConfig.IS_MAP_PROCESSOR, false);
     DataSinkDescriptor dataSink = MROutput
         .createConfigBuilder(conf, org.apache.hadoop.mapred.TextOutputFormat.class, outputPath)
@@ -127,6 +129,7 @@ public class TestMROutput {
   public void testNewAPI_SequenceFileOutputFormat() throws Exception {
     String outputPath = "/tmp/output";
     JobConf conf = new JobConf();
+    conf.set("fs.defaultFS", "file:///");
     conf.setOutputKeyClass(NullWritable.class);
     conf.setOutputValueClass(Text.class);
     DataSinkDescriptor dataSink = MROutput
@@ -151,6 +154,7 @@ public class TestMROutput {
   public void testOldAPI_SequenceFileOutputFormat() throws Exception {
     String outputPath = "/tmp/output";
     JobConf conf = new JobConf();
+    conf.set("fs.defaultFS", "file:///");
     conf.setOutputKeyClass(NullWritable.class);
     conf.setOutputValueClass(Text.class);
     DataSinkDescriptor dataSink = MROutput

@@ -52,7 +52,7 @@ public class TestShuffleHandlerJobs {
   protected static MiniTezCluster tezCluster;
   protected static MiniDFSCluster dfsCluster;
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static FileSystem remoteFs;
   private static int NUM_NMS = 5;
   private static int NUM_DNS = 5;
@@ -61,6 +61,9 @@ public class TestShuffleHandlerJobs {
     try {
       conf.setInt(YarnConfiguration.RM_AM_MAX_ATTEMPTS, 1);
       conf.setInt(YarnConfiguration.NM_CONTAINER_MGR_THREAD_COUNT, 22);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(NUM_DNS)
           .format(true).build();
       remoteFs = dfsCluster.getFileSystem();
@@ -77,16 +80,16 @@ public class TestShuffleHandlerJobs {
     if (tezCluster == null) {
       tezCluster = new MiniTezCluster(TestShuffleHandlerJobs.class.getName(), NUM_NMS,
           1, 1);
-      Configuration conf = new Configuration();
-      conf.set(YarnConfiguration.NM_AUX_SERVICES,
+      Configuration miniTezconf = new Configuration(conf);
+      miniTezconf.set(YarnConfiguration.NM_AUX_SERVICES,
           ShuffleHandler.TEZ_SHUFFLE_SERVICEID);
       String serviceStr = String.format(YarnConfiguration.NM_AUX_SERVICE_FMT,
           ShuffleHandler.TEZ_SHUFFLE_SERVICEID);
-      conf.set(serviceStr, ShuffleHandler.class.getName());
-      conf.setInt(ShuffleHandler.SHUFFLE_PORT_CONFIG_KEY, 0);
-      conf.set("fs.defaultFS", remoteFs.getUri().toString());   // use HDFS
-      conf.setLong(YarnConfiguration.DEBUG_NM_DELETE_DELAY_SEC, 0l);
-      tezCluster.init(conf);
+      miniTezconf.set(serviceStr, ShuffleHandler.class.getName());
+      miniTezconf.setInt(ShuffleHandler.SHUFFLE_PORT_CONFIG_KEY, 0);
+      miniTezconf.set("fs.defaultFS", remoteFs.getUri().toString());   // use HDFS
+      miniTezconf.setLong(YarnConfiguration.DEBUG_NM_DELETE_DELAY_SEC, 0l);
+      tezCluster.init(miniTezconf);
       tezCluster.start();
     }
 

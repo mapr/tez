@@ -178,6 +178,7 @@ public class TestMultiMROutput {
           throws InterruptedException, IOException {
     String outputPath = "/tmp/output";
     JobConf conf = new JobConf();
+    conf.set("fs.defaultFS", "file:///");
     conf.setBoolean(MRConfig.IS_MAP_PROCESSOR, isMapper);
     conf.setOutputKeyClass(Text.class);
     conf.setOutputValueClass(Text.class);

@@ -117,7 +117,7 @@ public class TestTezJobs {
   protected static MiniTezCluster mrrTezCluster;
   protected static MiniDFSCluster dfsCluster;
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static FileSystem remoteFs;
   private static FileSystem localFs;
 
@@ -129,6 +129,9 @@ public class TestTezJobs {
     localFs = FileSystem.getLocal(conf);
     try {
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(2).format(true).racks(null)
           .build();
       remoteFs = dfsCluster.getFileSystem();
@@ -138,10 +141,10 @@ public class TestTezJobs {
 
     if (mrrTezCluster == null) {
       mrrTezCluster = new MiniTezCluster(TestTezJobs.class.getName(), 1, 1, 1);
-      Configuration conf = new Configuration();
-      conf.set("fs.defaultFS", remoteFs.getUri().toString()); // use HDFS
-      conf.setLong(TezConfiguration.TEZ_AM_SLEEP_TIME_BEFORE_EXIT_MILLIS, 500);
-      mrrTezCluster.init(conf);
+      Configuration miniTezconf = new Configuration(conf);
+      miniTezconf.set("fs.defaultFS", remoteFs.getUri().toString()); // use HDFS
+      miniTezconf.setLong(TezConfiguration.TEZ_AM_SLEEP_TIME_BEFORE_EXIT_MILLIS, 500);
+      mrrTezCluster.init(miniTezconf);
       mrrTezCluster.start();
     }
 

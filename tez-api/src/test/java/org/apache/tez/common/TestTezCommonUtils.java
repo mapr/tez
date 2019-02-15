@@ -22,6 +22,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import org.apache.log4j.Appender;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.spi.LoggingEvent;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -35,11 +40,13 @@ import org.apache.hadoop.yarn.api.records.URL;
 import org.apache.tez.client.TestTezClientUtils;
 import org.apache.tez.dag.api.TezConfiguration;
 import org.apache.tez.dag.api.TezConstants;
-import org.apache.tez.dag.api.TezUncheckedException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class TestTezCommonUtils {
   private static final String STAGE_DIR = "/tmp/mystage";
@@ -57,6 +64,7 @@ public class TestTezCommonUtils {
     LOG.info("Starting mini clusters");
     try {
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(3).format(true).racks(null)
           .build();
       remoteFs = dfsCluster.getFileSystem();
@@ -87,7 +95,7 @@ public class TestTezCommonUtils {
     localConf.unset(TezConfiguration.TEZ_AM_STAGING_DIR);
     localConf.set("fs.defaultFS", "file:///");
     Path stageDir = TezCommonUtils.getTezBaseStagingPath(localConf);
-    Assert.assertEquals(stageDir.toString(), "file:" + TezConfiguration.TEZ_AM_STAGING_DIR_DEFAULT);
+    Assert.assertEquals(stageDir.toString(), "file://" + TezConfiguration.TEZ_AM_STAGING_DIR_DEFAULT);
 
     // check if user set something, indeed works
     conf.set(TezConfiguration.TEZ_AM_STAGING_DIR, STAGE_DIR);
@@ -252,6 +260,10 @@ public class TestTezCommonUtils {
 
   @Test(timeout = 5000)
   public void testAddAdditionalLocalResources() {
+    Appender mockAppender = Mockito.mock(Appender.class);
+    LogManager.getRootLogger().addAppender(mockAppender);
+    ArgumentCaptor<LoggingEvent> eventArgumentCaptor = ArgumentCaptor.forClass(LoggingEvent.class);
+
     String lrName = "LR";
     Map<String, LocalResource> originalLrs;
     originalLrs= Maps.newHashMap();
@@ -280,12 +292,13 @@ public class TestTezCommonUtils {
     additionalLrs = Maps.newHashMap();
     additionalLrs.put(lrName, LocalResource.newInstance(URL.newInstance("file", "localhost", 0, "/test"),
         LocalResourceType.FILE, LocalResourceVisibility.PUBLIC, 100, 1));
-    try {
-      TezCommonUtils.addAdditionalLocalResources(additionalLrs, originalLrs, "");
-      Assert.fail("Duplicate LRs with different sizes expected to fail");
-    } catch (TezUncheckedException e) {
-      Assert.assertTrue(e.getMessage().contains("Duplicate Resources found with different size"));
-    }
+
+    TezCommonUtils.addAdditionalLocalResources(additionalLrs, originalLrs, "");
+
+    verify(mockAppender, times(2))
+        .doAppend(eventArgumentCaptor.capture());
+    Assert.assertTrue(eventArgumentCaptor.getValue().getRenderedMessage().
+        contains("Duplicate Resources found with different size for"));
 
     // Different path, same size, diff timestamp
     originalLrs= Maps.newHashMap();
@@ -305,13 +318,14 @@ public class TestTezCommonUtils {
     additionalLrs = Maps.newHashMap();
     additionalLrs.put(lrName, LocalResource.newInstance(URL.newInstance("file", "localhost", 0, "/test2"),
         LocalResourceType.FILE, LocalResourceVisibility.PUBLIC, 100, 1));
-    try {
-      TezCommonUtils.addAdditionalLocalResources(additionalLrs, originalLrs, "");
-      Assert.fail("Duplicate LRs with different sizes expected to fail");
-    } catch (TezUncheckedException e) {
-      Assert.assertTrue(e.getMessage().contains("Duplicate Resources found with different size"));
-    }
 
+    TezCommonUtils.addAdditionalLocalResources(additionalLrs, originalLrs, "");
+
+    verify(mockAppender, times(4))
+        .doAppend(eventArgumentCaptor.capture());
+    Assert.assertTrue(eventArgumentCaptor.getValue().getRenderedMessage().
+        contains("Duplicate Resources found with different size for"));
+    LogManager.getRootLogger().removeAppender(mockAppender);
   }
 
   @Test (timeout = 5000)

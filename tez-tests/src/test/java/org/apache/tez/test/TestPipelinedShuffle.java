@@ -65,7 +65,7 @@ public class TestPipelinedShuffle {
   private static MiniDFSCluster miniDFSCluster;
   private static MiniTezCluster miniTezCluster;
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static FileSystem fs;
 
   private static String TEST_ROOT_DIR = "target" + Path.SEPARATOR
@@ -75,8 +75,11 @@ public class TestPipelinedShuffle {
 
   @BeforeClass
   public static void setupDFSCluster() throws Exception {
-    conf = new Configuration();
+    conf = new Configuration(false);
     conf.setBoolean(DFSConfigKeys.DFS_NAMENODE_EDITS_NOEDITLOGCHANNELFLUSH, false);
+    conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+    conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+    conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
     miniDFSCluster =

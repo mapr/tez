@@ -53,7 +53,7 @@ public class TestMRRJobs {
   protected static MiniTezCluster mrrTezCluster;
   protected static MiniDFSCluster dfsCluster;
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static FileSystem remoteFs;
 
   private static String TEST_ROOT_DIR = "target"
@@ -67,6 +67,9 @@ public class TestMRRJobs {
     try {
       conf.setInt(YarnConfiguration.RM_AM_MAX_ATTEMPTS, 1);
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(2)
         .format(true).racks(null).build();
       remoteFs = dfsCluster.getFileSystem();
@@ -83,12 +86,12 @@ public class TestMRRJobs {
     if (mrrTezCluster == null) {
       mrrTezCluster = new MiniTezCluster(TestMRRJobs.class.getName(), 1,
           1, 1);
-      Configuration conf = new Configuration();
-      conf.set("fs.defaultFS", remoteFs.getUri().toString());   // use HDFS
-      conf.set(MRJobConfig.MR_AM_STAGING_DIR, "/apps_staging_dir");
-      conf.setLong(YarnConfiguration.DEBUG_NM_DELETE_DELAY_SEC, 0l);
-      conf.setLong(TezConfiguration.TEZ_AM_SLEEP_TIME_BEFORE_EXIT_MILLIS, 500);
-      mrrTezCluster.init(conf);
+      Configuration miniTezconf = new Configuration(conf);
+      miniTezconf.set("fs.defaultFS", remoteFs.getUri().toString());   // use HDFS
+      miniTezconf.set(MRJobConfig.MR_AM_STAGING_DIR, "/apps_staging_dir");
+      miniTezconf.setLong(YarnConfiguration.DEBUG_NM_DELETE_DELAY_SEC, 0l);
+      miniTezconf.setLong(TezConfiguration.TEZ_AM_SLEEP_TIME_BEFORE_EXIT_MILLIS, 500);
+      mrrTezCluster.init(miniTezconf);
       mrrTezCluster.start();
     }
 

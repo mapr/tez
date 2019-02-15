@@ -197,7 +197,7 @@
               <goal>exec</goal>
             </goals>
             <configuration>
-              <skip>${skipTests}</skip>
+              <skip>true</skip>
               <workingDirectory>${webappDir}</workingDirectory>
               <executable>${nodeExecutable}</executable>
               <arguments>

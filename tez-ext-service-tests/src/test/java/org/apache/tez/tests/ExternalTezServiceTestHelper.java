@@ -44,7 +44,7 @@ public class ExternalTezServiceTestHelper {
   private volatile MiniDFSCluster dfsCluster;
   private volatile MiniTezTestServiceCluster tezTestServiceCluster;
 
-  private volatile Configuration clusterConf = new Configuration();
+  private volatile Configuration clusterConf = new Configuration(false);
   private volatile Configuration confForJobs;
 
   private volatile FileSystem remoteFs;
@@ -59,6 +59,9 @@ public class ExternalTezServiceTestHelper {
       IOException {
     try {
       clusterConf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, testRootDir);
+      clusterConf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      clusterConf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      clusterConf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster =
           new MiniDFSCluster.Builder(clusterConf).numDataNodes(1).format(true).racks(null).build();
       remoteFs = dfsCluster.getFileSystem();
@@ -68,7 +71,7 @@ public class ExternalTezServiceTestHelper {
     }
 
     tezCluster = new MiniTezCluster(TestExternalTezServices.class.getName(), 1, 1, 1);
-    Configuration conf = new Configuration();
+    Configuration conf = new Configuration(clusterConf);
     conf.set("fs.defaultFS", remoteFs.getUri().toString()); // use HDFS
     tezCluster.init(conf);
     tezCluster.start();

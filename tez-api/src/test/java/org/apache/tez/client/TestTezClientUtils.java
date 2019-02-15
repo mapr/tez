@@ -328,6 +328,7 @@ public class TestTezClientUtils {
   // ApplicationSubmissionContext
   public void testAppSubmissionContextForPriority() throws Exception {
     TezConfiguration tezConf = new TezConfiguration();
+    tezConf.set("fs.defaultFS", "file:///");
     int testpriority = 999;
     ApplicationId appId = ApplicationId.newInstance(1000, 1);
     Credentials credentials = new Credentials();
@@ -378,7 +379,7 @@ public class TestTezClientUtils {
   public void testSessionTokenInAmClc() throws IOException, YarnException {
 
     TezConfiguration tezConf = new TezConfiguration();
-
+    tezConf.set("fs.defaultFS", "file:///");
     ApplicationId appId = ApplicationId.newInstance(1000, 1);
     DAG dag = DAG.create("testdag");
     dag.addVertex(Vertex.create("testVertex", ProcessorDescriptor.create("processorClassname"), 1)
@@ -414,6 +415,7 @@ public class TestTezClientUtils {
   public void testAMLoggingOptsSimple() throws IOException, YarnException {
 
     TezConfiguration tezConf = new TezConfiguration();
+    tezConf.set("fs.defaultFS", "file:///");
     tezConf.set(TezConfiguration.TEZ_AM_LOG_LEVEL, "WARN");
 
     ApplicationId appId = ApplicationId.newInstance(1000, 1);
@@ -453,6 +455,7 @@ public class TestTezClientUtils {
   public void testAMLoggingOptsPerLogger() throws IOException, YarnException {
 
     TezConfiguration tezConf = new TezConfiguration();
+    tezConf.set("fs.defaultFS", "file:///");
     tezConf.set(TezConfiguration.TEZ_AM_LOG_LEVEL,
         "WARN;org.apache.hadoop.ipc=DEBUG;org.apache.hadoop.security=DEBUG");
 

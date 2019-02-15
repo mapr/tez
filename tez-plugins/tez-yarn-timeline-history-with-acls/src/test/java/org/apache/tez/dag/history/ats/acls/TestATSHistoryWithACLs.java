@@ -83,7 +83,7 @@ public class TestATSHistoryWithACLs {
   private static String timelineAddress;
   private Random random = new Random();
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static FileSystem remoteFs;
 
   private static String TEST_ROOT_DIR = "target" + Path.SEPARATOR
@@ -94,7 +94,12 @@ public class TestATSHistoryWithACLs {
   @BeforeClass
   public static void setup() throws IOException {
     try {
+      conf.addResource("yarn-default.xml");
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
+      conf.setBoolean("hadoop.http.authentication.simple.anonymous.allowed", true);
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(2).format(true).racks(null)
           .build();
       remoteFs = dfsCluster.getFileSystem();
@@ -106,11 +111,11 @@ public class TestATSHistoryWithACLs {
       try {
         mrrTezCluster = new MiniTezClusterWithTimeline(TestATSHistoryWithACLs.class.getName(),
             1, 1, 1, true);
-        Configuration conf = new Configuration();
-        conf.setBoolean(YarnConfiguration.TIMELINE_SERVICE_ENABLED, true);
-        conf.set("fs.defaultFS", remoteFs.getUri().toString()); // use HDFS
-        conf.setInt("yarn.nodemanager.delete.debug-delay-sec", 20000);
-        mrrTezCluster.init(conf);
+        Configuration miniTezconf = new Configuration(conf);
+        miniTezconf.setBoolean(YarnConfiguration.TIMELINE_SERVICE_ENABLED, true);
+        miniTezconf.set("fs.defaultFS", remoteFs.getUri().toString()); // use HDFS
+        miniTezconf.setInt("yarn.nodemanager.delete.debug-delay-sec", 20000);
+        mrrTezCluster.init(miniTezconf);
         mrrTezCluster.start();
       } catch (Throwable e) {
         LOG.info("Failed to start Mini Tez Cluster", e);

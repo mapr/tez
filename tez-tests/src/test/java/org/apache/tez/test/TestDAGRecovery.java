@@ -55,7 +55,7 @@ public class TestDAGRecovery {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestDAGRecovery.class);
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static MiniTezCluster miniTezCluster = null;
   private static String TEST_ROOT_DIR = "target" + Path.SEPARATOR
       + TestDAGRecovery.class.getName() + "-tmpDir";
@@ -69,6 +69,9 @@ public class TestDAGRecovery {
     LOG.info("Starting mini clusters");
     try {
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(3)
           .format(true).racks(null).build();
       remoteFs = dfsCluster.getFileSystem();

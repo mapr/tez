@@ -50,6 +50,7 @@ public class TestMROutputLegacy {
   public void testOldAPI_MR() throws Exception {
     String outputPath = "/tmp/output";
     JobConf conf = new JobConf();
+    conf.set("fs.defaultFS", "file:///");
     conf.setOutputKeyClass(NullWritable.class);
     conf.setOutputValueClass(Text.class);
     conf.setOutputFormat(org.apache.hadoop.mapred.SequenceFileOutputFormat.class);
@@ -81,6 +82,7 @@ public class TestMROutputLegacy {
   public void testNewAPI_MR() throws Exception {
     String outputPath = "/tmp/output";
     Job job = Job.getInstance();
+    job.getConfiguration().set("fs.defaultFS", "file:///");
     job.setOutputKeyClass(NullWritable.class);
     job.setOutputValueClass(Text.class);
     job.setOutputFormatClass(SequenceFileOutputFormat.class);
@@ -113,6 +115,7 @@ public class TestMROutputLegacy {
   public void testOldAPI_MapperOnly() throws Exception {
     String outputPath = "/tmp/output";
     JobConf conf = new JobConf();
+    conf.set("fs.defaultFS", "file:///");
     conf.setOutputKeyClass(NullWritable.class);
     conf.setOutputValueClass(Text.class);
     conf.setOutputFormat(org.apache.hadoop.mapred.SequenceFileOutputFormat.class);
@@ -144,6 +147,7 @@ public class TestMROutputLegacy {
   public void testNewAPI_MapperOnly() throws Exception {
     String outputPath = "/tmp/output";
     Job job = Job.getInstance();
+    job.getConfiguration().set("fs.defaultFS", "file:///");
     job.setOutputKeyClass(NullWritable.class);
     job.setOutputValueClass(Text.class);
     job.setOutputFormatClass(SequenceFileOutputFormat.class);

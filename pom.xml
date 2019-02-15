@@ -938,6 +938,7 @@
             <systemPropertyVariables>
               <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
               <tez.hadoop.version>${hadoop.version}</tez.hadoop.version>
+             <java.security.auth.login.config>${basedir}/../test-conf/jaas.conf</java.security.auth.login.config>
             </systemPropertyVariables>
           </configuration>
         </plugin>

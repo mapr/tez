@@ -144,6 +144,7 @@ public class TestTezClient {
     if (conf == null) {
       conf = new TezConfiguration();
     }
+    conf.set("fs.defaultFS", "file:///");
     conf.setBoolean(TezConfiguration.TEZ_IGNORE_LIB_URIS, true);
     conf.setBoolean(TezConfiguration.TEZ_AM_SESSION_MODE, isSession);
     TezClientForTest client = new TezClientForTest("test", conf, lrs, null);
@@ -197,6 +198,7 @@ public class TestTezClient {
   private void _testTezClientSessionLargeDAGPlan(int maxIPCMsgSize, int payloadSize, int amResourceSize,
                                                boolean shouldSerialize) throws Exception {
     TezConfiguration conf = new TezConfiguration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setInt(CommonConfigurationKeys.IPC_MAXIMUM_DATA_LENGTH, maxIPCMsgSize);
     conf.set(TezConfiguration.TEZ_AM_STAGING_DIR, "target/"+this.getClass().getName());
     TezClientForTest client = configureAndCreateTezClient(null, true, conf);
@@ -596,6 +598,7 @@ public class TestTezClient {
     int newCounterLimit = defaultCounterLimit + 500;
 
     TezConfiguration conf = new TezConfiguration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setInt(TezConfiguration.TEZ_COUNTERS_MAX, newCounterLimit);
 
     configureAndCreateTezClient(conf);
@@ -688,6 +691,7 @@ public class TestTezClient {
       TezException {
     TezConfiguration conf = new TezConfiguration();
     conf.set(TezConfiguration.TEZ_CLIENT_JAVA_OPTS_CHECKER_CLASS, "InvalidClassName");
+    conf.set("fs.defaultFS", "file:///");
     TezClientForTest client = configureAndCreateTezClient(conf);
     client.start();
   }
@@ -696,6 +700,7 @@ public class TestTezClient {
   public void testInvalidJavaOptsChecker2() throws YarnException, IOException, ServiceException,
       TezException {
     TezConfiguration conf = new TezConfiguration();
+    conf.set("fs.defaultFS", "file:///");
     conf.set(TezConfiguration.TEZ_CLIENT_JAVA_OPTS_CHECKER_CLASS, InvalidChecker.class.getName());
     TezClientForTest client = configureAndCreateTezClient(conf);
     client.start();
@@ -704,6 +709,7 @@ public class TestTezClient {
   @Test(timeout = 5000)
   public void testStopRetriesUntilTerminalState() throws Exception {
     TezConfiguration conf = new TezConfiguration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setBoolean(TezConfiguration.TEZ_CLIENT_ASYNCHRONOUS_STOP, false);
     conf.setLong(TezConfiguration.TEZ_CLIENT_HARD_KILL_TIMEOUT_MS, HARD_KILL_TIMEOUT);
     final TezClientForTest client = configureAndCreateTezClient(conf);
@@ -721,6 +727,7 @@ public class TestTezClient {
   @Test(timeout = 20000)
   public void testStopRetriesUntilTimeout() throws Exception {
     TezConfiguration conf = new TezConfiguration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setBoolean(TezConfiguration.TEZ_CLIENT_ASYNCHRONOUS_STOP, false);
     conf.setLong(TezConfiguration.TEZ_CLIENT_HARD_KILL_TIMEOUT_MS, HARD_KILL_TIMEOUT);
     final TezClientForTest client = configureAndCreateTezClient(conf);
@@ -801,6 +808,7 @@ public class TestTezClient {
   @Test(timeout = 30000)
   public void testAMClientHeartbeat() throws Exception {
     TezConfiguration conf = new TezConfiguration();
+    conf.set("fs.defaultFS", "file:///");
     conf.setInt(TezConfiguration.TEZ_AM_CLIENT_HEARTBEAT_TIMEOUT_SECS, 10);
     final TezClientForTest client = configureAndCreateTezClient(conf);
     client.start();

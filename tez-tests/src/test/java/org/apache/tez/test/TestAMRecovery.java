@@ -86,7 +86,7 @@ public class TestAMRecovery {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestAMRecovery.class);
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static TezConfiguration tezConf;
   private static int MAX_AM_ATTEMPT = 10;
   private static MiniTezCluster miniTezCluster = null;
@@ -103,6 +103,9 @@ public class TestAMRecovery {
     LOG.info("Starting mini clusters");
     try {
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster =
           new MiniDFSCluster.Builder(conf).numDataNodes(3).format(true)
               .racks(null).build();
@@ -116,7 +119,7 @@ public class TestAMRecovery {
       Configuration miniTezconf = new Configuration(conf);
       miniTezconf.setInt(YarnConfiguration.RM_AM_MAX_ATTEMPTS, MAX_AM_ATTEMPT);
       miniTezconf.set("fs.defaultFS", remoteFs.getUri().toString()); // use HDFS
-      conf.setLong(TezConfiguration.TEZ_AM_SLEEP_TIME_BEFORE_EXIT_MILLIS, 500);
+      miniTezconf.setLong(TezConfiguration.TEZ_AM_SLEEP_TIME_BEFORE_EXIT_MILLIS, 500);
       miniTezCluster.init(miniTezconf);
       miniTezCluster.start();
     }
@@ -393,7 +396,7 @@ public class TestAMRecovery {
    *
    * @throws Exception
    */
-  @Test(timeout = 600000)
+  @Test(timeout = 1200000)
   public void testHighMaxAttempt() throws Exception {
     Random rand = new Random();
     tezConf.set(FAIL_ON_ATTEMPT, rand.nextInt(MAX_AM_ATTEMPT) + "");

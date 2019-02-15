@@ -32,6 +32,9 @@ import org.apache.hadoop.yarn.api.records.LocalResourceType;
 import org.apache.hadoop.yarn.api.records.LocalResourceVisibility;
 import org.apache.hadoop.yarn.api.records.Resource;
 import org.apache.hadoop.yarn.api.records.URL;
+import org.apache.log4j.Appender;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.spi.LoggingEvent;
 import org.apache.tez.common.security.DAGAccessControls;
 import org.apache.tez.dag.api.EdgeProperty.DataMovementType;
 import org.apache.tez.dag.api.EdgeProperty.DataSourceType;
@@ -42,10 +45,15 @@ import org.apache.tez.dag.api.records.DAGProtos.PlanTaskConfiguration;
 import org.apache.tez.dag.api.records.DAGProtos.VertexPlan;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class TestDAGVerify {
 
@@ -981,6 +989,10 @@ public class TestDAGVerify {
 
   @Test(timeout = 5000)
   public void testInferredFilesFail() {
+    Appender mockAppender = Mockito.mock(Appender.class);
+    LogManager.getRootLogger().addAppender(mockAppender);
+    ArgumentCaptor<LoggingEvent> eventArgumentCaptor = ArgumentCaptor.forClass(LoggingEvent.class);
+
     Vertex v1 = Vertex.create("v1",
         ProcessorDescriptor.create(dummyProcessorClassName),
         dummyTaskCount, dummyTaskResource);
@@ -996,12 +1008,11 @@ public class TestDAGVerify {
 
     v1.addTaskLocalFiles(lrs);
     // Allowed since the LR is the same.
-    try {
-      v1.addTaskLocalFiles(lrs2);
-      Assert.fail();
-    } catch (TezUncheckedException e) {
-      Assert.assertTrue(e.getMessage().contains("Duplicate Resources found with different size"));
-    }
+    v1.addTaskLocalFiles(lrs2);
+     verify(mockAppender, times(1))
+        .doAppend(eventArgumentCaptor.capture());
+    Assert.assertTrue(eventArgumentCaptor.getValue().getRenderedMessage().
+        contains("Duplicate Resources found with different size for"));
 
     DataSourceDescriptor ds = DataSourceDescriptor.create(InputDescriptor.create("I.class"), 
         null, -1, null, null, lrs2);
@@ -1010,19 +1021,19 @@ public class TestDAGVerify {
     DAG dag = DAG.create("testDag");
     dag.addVertex(v1);
     dag.addTaskLocalFiles(lrs);
-    try {
-      dag.addTaskLocalFiles(lrs2);
-      Assert.fail();
-    } catch (TezUncheckedException e) {
-      Assert.assertTrue(e.getMessage().contains("Duplicate Resources found with different size"));
-    }
-    try {
-      // data source will add duplicate common files to vertex
-      dag.createDag(new TezConfiguration(), null, null, null, true);
-      Assert.fail();
-    } catch (TezUncheckedException e) {
-      Assert.assertTrue(e.getMessage().contains("Duplicate Resources found with different size"));
-    }
+    dag.addTaskLocalFiles(lrs2);
+    verify(mockAppender, times(2))
+        .doAppend(eventArgumentCaptor.capture());
+    Assert.assertTrue(eventArgumentCaptor.getValue().getRenderedMessage().
+        contains("Duplicate Resources found with different size for"));
+
+    // data source will add duplicate common files to vertex
+    dag.createDag(new TezConfiguration(), null, null, null, true);
+    verify(mockAppender, times(3))
+        .doAppend(eventArgumentCaptor.capture());
+    Assert.assertTrue(eventArgumentCaptor.getValue().getRenderedMessage().
+        contains("Found Resources Duplication in"));
+    LogManager.getRootLogger().removeAppender(mockAppender);
   }
   
   @Test(timeout = 5000)

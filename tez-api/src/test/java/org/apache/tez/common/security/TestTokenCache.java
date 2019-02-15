@@ -54,6 +54,7 @@ public class TestTokenCache {
   @BeforeClass
   public static void setup() throws Exception {
     conf = new Configuration();
+    conf.set("fs.defaultFS", "file:///");
     conf.set(YarnConfiguration.RM_PRINCIPAL, "mapred/host@REALM");
     conf.setSocketAddr(YarnConfiguration.RM_ADDRESS,
         InetSocketAddress.createUnresolved("127.0.0.1", 8032));

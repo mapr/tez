@@ -69,7 +69,7 @@ public class TestExtServicesWithLocalMode {
       Vertex.VertexExecutionContext.create(
           EXT_PUSH_ENTITY_NAME, EXT_PUSH_ENTITY_NAME, EXT_PUSH_ENTITY_NAME);
 
-  private static volatile Configuration clusterConf = new Configuration();
+  private static volatile Configuration clusterConf = new Configuration(false);
   private static volatile FileSystem localFs;
   private static volatile MiniTezTestServiceCluster tezTestServiceCluster;
 

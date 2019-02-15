@@ -66,7 +66,7 @@ import org.junit.Test;
 public class TestFaultTolerance {
   private static final Logger LOG = LoggerFactory.getLogger(TestFaultTolerance.class);
 
-  private static Configuration conf = new Configuration();
+  private static Configuration conf = new Configuration(false);
   private static MiniTezCluster miniTezCluster;
   private static String TEST_ROOT_DIR = "target" + Path.SEPARATOR
       + TestFaultTolerance.class.getName() + "-tmpDir";
@@ -81,6 +81,9 @@ public class TestFaultTolerance {
     FileSystem remoteFs = null;
     try {
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+      conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(1)
           .format(true).racks(null).build();
       remoteFs = dfsCluster.getFileSystem();

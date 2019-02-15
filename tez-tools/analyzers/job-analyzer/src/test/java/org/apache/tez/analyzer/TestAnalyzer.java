@@ -92,8 +92,13 @@ public class TestAnalyzer {
 
   @BeforeClass
   public static void setupClass() throws Exception {
-    conf = new Configuration();
+    conf = new Configuration(false);
+    conf.addResource("yarn-default.xml");
     conf.setBoolean(DFSConfigKeys.DFS_NAMENODE_EDITS_NOEDITLOGCHANNELFLUSH, false);
+    conf.set("fs.AbstractFileSystem.hdfs.impl", "org.apache.hadoop.fs.Hdfs");
+    conf.set("fs.AbstractFileSystem.file.impl", "org.apache.hadoop.fs.local.LocalFs");
+    conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
+    conf.setInt("mapreduce.reduce.memory.mb", 1024);
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
     dfsCluster =

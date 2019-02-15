@@ -64,6 +64,7 @@ public class TestMRInputHelpers {
   public static void setup() throws IOException {
     try {
       conf.set(MiniDFSCluster.HDFS_MINIDFS_BASEDIR, TEST_ROOT_DIR);
+      conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
       dfsCluster = new MiniDFSCluster.Builder(conf).numDataNodes(2)
           .format(true).racks(null).build();
       remoteFs = dfsCluster.getFileSystem();
